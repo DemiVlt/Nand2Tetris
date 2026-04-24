@@ -1,0 +1,419 @@
+function Display.draw_matrix 4
+call Screen.clearScreen 0
+pop temp 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 200
+lt
+not
+if-goto WHILE_END0
+push local 0
+push constant 40
+add
+call Game.get_matrix_val 1
+pop local 3
+push local 0
+push constant 10
+call Math.divide 2
+push constant 10
+call Math.multiply 2
+pop local 2
+push argument 0
+push local 0
+push local 2
+sub
+push constant 10
+call Math.multiply 2
+add
+pop local 1
+push local 3
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 1
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 2
+add
+push local 2
+push constant 2
+add
+push local 1
+push constant 7
+add
+push local 2
+push constant 7
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 3
+add
+push local 2
+push constant 3
+add
+push local 1
+push constant 6
+add
+push local 2
+push constant 6
+add
+call Screen.drawRectangle 4
+pop temp 0
+label IF_FALSE0
+push local 3
+push constant 1
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 2
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 3
+add
+push local 2
+push constant 3
+add
+push local 1
+push constant 6
+add
+push local 2
+push constant 3
+add
+call Screen.drawLine 4
+pop temp 0
+push local 1
+push constant 3
+add
+push local 2
+push constant 3
+add
+push local 1
+push constant 3
+add
+push local 2
+push constant 6
+add
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+label IF_FALSE1
+push local 3
+push constant 2
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 2
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 2
+add
+push local 2
+push constant 2
+add
+push local 1
+push constant 7
+add
+push local 2
+push constant 7
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 3
+add
+push local 2
+push constant 3
+add
+push local 1
+push constant 6
+add
+push local 2
+push constant 3
+add
+call Screen.drawLine 4
+pop temp 0
+push local 1
+push constant 3
+add
+push local 2
+push constant 3
+add
+push local 1
+push constant 3
+add
+push local 2
+push constant 6
+add
+call Screen.drawLine 4
+pop temp 0
+label IF_FALSE2
+push local 3
+push constant 3
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 1
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 2
+add
+push local 2
+push constant 2
+add
+push local 1
+push constant 7
+add
+push local 2
+push constant 7
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 3
+add
+push local 2
+push constant 3
+add
+push local 1
+push constant 6
+add
+push local 2
+push constant 6
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 4
+add
+push local 2
+push constant 4
+add
+push local 1
+push constant 5
+add
+push local 2
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+label IF_FALSE3
+push local 3
+push constant 4
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 1
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+label IF_FALSE4
+push local 3
+push constant 5
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 1
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 2
+add
+push local 2
+push constant 2
+add
+push local 1
+push constant 7
+add
+push local 2
+push constant 7
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 4
+add
+push local 2
+push constant 4
+add
+push local 1
+push constant 5
+add
+push local 2
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+label IF_FALSE5
+push local 3
+push constant 6
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push local 1
+push constant 1
+add
+push local 2
+push constant 1
+add
+push local 1
+push constant 8
+add
+push local 2
+push constant 8
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push local 1
+push constant 4
+add
+push local 2
+push constant 4
+add
+push local 1
+push constant 5
+add
+push local 2
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+label IF_FALSE6
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push local 0
+call Output.printInt 1
+pop temp 0
+push constant 0
+return

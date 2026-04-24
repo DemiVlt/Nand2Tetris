@@ -1,0 +1,2 @@
+!cargo run ./7\MemoryAccess\BasicTest\BasicTest.vm && cargo run ./7\MemoryAccess\PointerTest\PointerTest.vm && cargo run ./7\MemoryAccess\StaticTest\StaticTest.vm && cargo run ./7\StackArithmetic\SimpleAdd\SimpleAdd.vm && cargo run ./7\StackArithmetic\StackTest\StackTest.vm && CPUEmulator ./7\MemoryAccess\BasicTest\BasicTest.tst && CPUEmulator ./7\MemoryAccess\PointerTest\PointerTest.tst && CPUEmulator ./7\MemoryAccess\StaticTest\StaticTest.tst && CPUEmulator ./7\StackArithmetic\SimpleAdd\SimpleAdd.tst && CPUEmulator ./7\StackArithmetic\StackTest\StackTest.tst
+

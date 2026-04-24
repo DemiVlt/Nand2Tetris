@@ -1,0 +1,1286 @@
+function Game.new 1
+push constant 12
+call Memory.alloc 1
+pop pointer 0
+push constant 240
+call Array.new 1
+pop static 0
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 240
+lt
+not
+if-goto WHILE_END0
+push local 0
+push static 0
+add
+push constant 7
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push pointer 0
+call Game.refill_bag 1
+pop temp 0
+push constant 6
+call Array.new 1
+pop this 1
+push constant 0
+pop local 0
+label WHILE_EXP1
+push local 0
+push constant 6
+lt
+not
+if-goto WHILE_END1
+push local 0
+push this 1
+add
+push local 0
+push this 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push constant 6
+push this 0
+add
+pop pointer 1
+push that 0
+call Tetrimino.new 1
+pop this 2
+push pointer 0
+call Game.refill_bag 1
+pop temp 0
+push constant 7
+pop this 8
+push constant 0
+pop this 3
+push constant 1
+pop this 4
+push constant 0
+pop this 5
+push constant 0
+pop this 6
+push pointer 0
+return
+function Game.run 11
+push argument 0
+pop pointer 0
+push constant 0
+pop local 2
+push constant 0
+not
+pop this 10
+push constant 0
+pop local 3
+push constant 0
+pop local 4
+push constant 0
+pop local 5
+push constant 0
+pop local 8
+push constant 0
+pop local 9
+push constant 0
+pop local 10
+label WHILE_EXP0
+push local 8
+not
+not
+if-goto WHILE_END0
+push pointer 0
+call Game.get_drop_delay 1
+pop local 6
+label WHILE_EXP1
+push local 0
+push constant 0
+eq
+push local 8
+not
+and
+not
+if-goto WHILE_END1
+push local 2
+push local 6
+call Main.modulo 2
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+call Display.draw_matrix 1
+pop temp 0
+push this 2
+push constant 10
+call Tetrimino.move_by_offset 2
+not
+pop local 9
+push local 9
+push local 4
+push constant 100
+eq
+push local 5
+or
+push constant 14
+gt
+and
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+call Game.lock_tetrimino 1
+pop temp 0
+label IF_FALSE1
+label IF_FALSE0
+push local 9
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 4
+push constant 1
+add
+pop local 4
+label IF_FALSE2
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 131
+eq
+push local 0
+push constant 56
+eq
+or
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+label WHILE_EXP2
+push this 2
+push constant 10
+call Tetrimino.move_by_offset 2
+not
+if-goto WHILE_END2
+push pointer 0
+push constant 2
+call Game.increase_score_by 2
+pop temp 0
+goto WHILE_EXP2
+label WHILE_END2
+push pointer 0
+call Game.lock_tetrimino 1
+pop temp 0
+label IF_FALSE3
+push local 0
+push constant 133
+eq
+push local 0
+push constant 50
+eq
+or
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push pointer 0
+call Game.get_drop_delay 1
+push constant 20
+call Math.divide 2
+push constant 5
+add
+pop local 6
+label IF_FALSE4
+push local 0
+push constant 130
+eq
+push local 0
+push constant 52
+eq
+or
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push this 2
+push constant 1
+neg
+call Tetrimino.move_by_offset 2
+pop temp 0
+push constant 0
+pop local 4
+push local 5
+push constant 1
+add
+pop local 5
+push constant 0
+pop this 6
+label IF_FALSE5
+push local 0
+push constant 132
+eq
+push local 0
+push constant 54
+eq
+or
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push this 2
+push constant 1
+call Tetrimino.move_by_offset 2
+pop temp 0
+push constant 0
+pop local 4
+push local 5
+push constant 1
+add
+pop local 5
+push constant 0
+pop this 6
+label IF_FALSE6
+push local 0
+push constant 120
+eq
+push local 0
+push constant 49
+eq
+or
+push local 0
+push constant 53
+eq
+push local 0
+push constant 57
+eq
+or
+or
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push this 2
+push constant 0
+not
+call Tetrimino.rotate 2
+pop this 6
+push this 6
+push constant 1
+eq
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+push pointer 0
+push constant 100
+call Game.increase_score_by 2
+pop temp 0
+label IF_FALSE8
+push this 6
+push constant 2
+eq
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+push pointer 0
+push constant 400
+call Game.increase_score_by 2
+pop temp 0
+label IF_FALSE9
+push constant 0
+pop local 4
+push local 5
+push constant 1
+add
+pop local 5
+label IF_FALSE7
+push local 0
+push constant 122
+eq
+push local 0
+push constant 51
+eq
+or
+push local 0
+push constant 55
+eq
+or
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push this 2
+push constant 0
+call Tetrimino.rotate 2
+pop this 6
+push this 6
+push constant 1
+eq
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+push pointer 0
+push constant 100
+call Game.increase_score_by 2
+pop temp 0
+label IF_FALSE11
+push this 6
+push constant 2
+eq
+if-goto IF_TRUE12
+goto IF_FALSE12
+label IF_TRUE12
+push pointer 0
+push constant 400
+call Game.increase_score_by 2
+pop temp 0
+label IF_FALSE12
+push constant 0
+pop local 4
+push local 5
+push constant 1
+add
+pop local 5
+label IF_FALSE10
+push local 0
+push constant 99
+eq
+push local 0
+push constant 48
+eq
+or
+push this 10
+and
+if-goto IF_TRUE13
+goto IF_FALSE13
+label IF_TRUE13
+push this 2
+call Tetrimino.hide_minos 1
+pop temp 0
+push this 2
+call Tetrimino.get_type 1
+pop this 8
+push this 8
+push constant 7
+eq
+if-goto IF_TRUE14
+goto IF_FALSE14
+label IF_TRUE14
+push pointer 0
+call Game.pop_next_queue 1
+call Tetrimino.new 1
+pop this 2
+goto IF_END14
+label IF_FALSE14
+push this 8
+call Tetrimino.new 1
+pop this 2
+label IF_END14
+push constant 0
+pop this 10
+label IF_FALSE13
+push local 0
+push constant 140
+eq
+push local 0
+push constant 141
+eq
+or
+if-goto IF_TRUE15
+goto IF_FALSE15
+label IF_TRUE15
+push constant 0
+not
+pop local 8
+label IF_FALSE15
+push constant 0
+pop local 3
+label WHILE_EXP3
+push local 0
+push constant 0
+eq
+not
+push local 8
+not
+and
+not
+if-goto WHILE_END3
+call Keyboard.keyPressed 0
+pop local 1
+push local 0
+push local 1
+eq
+not
+if-goto IF_TRUE16
+goto IF_FALSE16
+label IF_TRUE16
+push constant 0
+pop local 0
+goto IF_END16
+label IF_FALSE16
+push local 1
+pop local 0
+label IF_END16
+push local 2
+push local 6
+call Main.modulo 2
+push constant 0
+eq
+if-goto IF_TRUE17
+goto IF_FALSE17
+label IF_TRUE17
+push constant 0
+call Display.draw_matrix 1
+pop temp 0
+push this 2
+push constant 10
+call Tetrimino.move_by_offset 2
+not
+pop local 9
+push local 6
+push pointer 0
+call Game.get_drop_delay 1
+lt
+if-goto IF_TRUE18
+goto IF_FALSE18
+label IF_TRUE18
+push pointer 0
+push constant 1
+call Game.increase_score_by 2
+pop temp 0
+label IF_FALSE18
+push local 9
+push local 4
+push constant 100
+eq
+push local 5
+or
+push constant 14
+gt
+and
+if-goto IF_TRUE19
+goto IF_FALSE19
+label IF_TRUE19
+push pointer 0
+call Game.lock_tetrimino 1
+pop temp 0
+label IF_FALSE19
+label IF_FALSE17
+push local 3
+push constant 59
+gt
+push local 3
+push constant 6
+call Main.modulo 2
+push constant 0
+eq
+and
+pop local 10
+push local 0
+push constant 130
+eq
+push local 0
+push constant 52
+eq
+or
+push local 10
+and
+if-goto IF_TRUE20
+goto IF_FALSE20
+label IF_TRUE20
+push this 2
+push constant 1
+neg
+call Tetrimino.move_by_offset 2
+if-goto IF_TRUE21
+goto IF_FALSE21
+label IF_TRUE21
+push constant 0
+pop local 4
+push local 5
+push constant 1
+add
+pop local 5
+label IF_FALSE21
+label IF_FALSE20
+push local 0
+push constant 132
+eq
+push local 0
+push constant 54
+eq
+or
+push local 10
+and
+if-goto IF_TRUE22
+goto IF_FALSE22
+label IF_TRUE22
+push this 2
+push constant 1
+call Tetrimino.move_by_offset 2
+if-goto IF_TRUE23
+goto IF_FALSE23
+label IF_TRUE23
+push constant 0
+pop local 4
+push local 5
+push constant 1
+add
+pop local 5
+label IF_FALSE23
+label IF_FALSE22
+push local 3
+push constant 1
+add
+pop local 3
+push local 9
+if-goto IF_TRUE24
+goto IF_FALSE24
+label IF_TRUE24
+push local 4
+push constant 1
+add
+pop local 4
+label IF_FALSE24
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP3
+label WHILE_END3
+goto WHILE_EXP0
+label WHILE_END0
+push local 8
+if-goto IF_TRUE25
+goto IF_FALSE25
+label IF_TRUE25
+label IF_FALSE25
+push constant 0
+return
+function Game.pop_next_queue 2
+push argument 0
+pop pointer 0
+push constant 0
+push this 1
+add
+pop pointer 1
+push that 0
+pop local 1
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 6
+lt
+not
+if-goto WHILE_END0
+push local 0
+push constant 5
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+push this 1
+add
+push local 0
+push constant 1
+add
+push this 1
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+label IF_FALSE0
+push local 0
+push this 0
+add
+push local 0
+push constant 1
+add
+push this 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push constant 5
+push this 1
+add
+push constant 0
+push this 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+push this 0
+add
+pop pointer 1
+push that 0
+push constant 1
+push this 0
+add
+pop pointer 1
+push that 0
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push pointer 0
+call Game.refill_bag 1
+pop temp 0
+label IF_FALSE1
+push local 1
+return
+function Game.refill_bag 6
+push argument 0
+pop pointer 0
+push constant 0
+pop local 0
+push constant 0
+pop local 1
+push constant 7
+call Array.new 1
+pop this 0
+push constant 0
+pop local 2
+label WHILE_EXP0
+push local 2
+push constant 1
+sub
+push constant 7
+lt
+not
+if-goto WHILE_END0
+push local 1
+pop local 3
+label WHILE_EXP1
+push local 5
+not
+if-goto WHILE_END1
+push local 0
+push constant 2
+neg
+call Math.multiply 2
+push local 3
+add
+pop local 0
+push local 0
+push local 0
+push constant 7
+call Math.divide 2
+push constant 7
+call Math.multiply 2
+sub
+call Math.abs 1
+pop local 1
+push constant 0
+pop local 4
+push constant 0
+pop local 5
+label WHILE_EXP2
+push local 4
+push constant 7
+lt
+push local 5
+not
+and
+not
+if-goto WHILE_END2
+push local 4
+push this 0
+add
+pop pointer 1
+push that 0
+push local 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+not
+pop local 5
+label IF_FALSE0
+push local 4
+push constant 1
+add
+pop local 4
+goto WHILE_EXP2
+label WHILE_END2
+push local 3
+push constant 1
+add
+pop local 3
+goto WHILE_EXP1
+label WHILE_END1
+push local 2
+push this 0
+add
+push local 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
+push constant 0
+return
+function Game.lock_tetrimino 10
+push argument 0
+pop pointer 0
+push constant 0
+not
+pop local 8
+push constant 1
+neg
+pop local 3
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 4
+lt
+not
+if-goto WHILE_END0
+push this 2
+push local 0
+call Tetrimino.get_mino 2
+push constant 10
+call Math.divide 2
+push local 4
+add
+pop local 6
+label WHILE_EXP1
+push local 6
+push local 3
+eq
+push local 0
+push constant 3
+lt
+and
+not
+if-goto WHILE_END1
+push this 2
+push local 0
+call Tetrimino.get_mino 2
+push constant 10
+call Math.divide 2
+push local 4
+add
+pop local 6
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP1
+label WHILE_END1
+push local 6
+pop local 3
+push local 3
+push constant 3
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+pop local 8
+label IF_FALSE0
+push constant 0
+not
+pop local 7
+push constant 0
+pop local 1
+label WHILE_EXP2
+push local 1
+push constant 10
+lt
+push local 7
+and
+not
+if-goto WHILE_END2
+push local 3
+push constant 10
+call Math.multiply 2
+push local 1
+add
+push static 0
+add
+pop pointer 1
+push that 0
+push constant 7
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+pop local 7
+label IF_FALSE1
+push local 1
+push constant 1
+add
+pop local 1
+goto WHILE_EXP2
+label WHILE_END2
+push local 7
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+pop local 1
+label WHILE_EXP3
+push local 1
+push constant 10
+lt
+not
+if-goto WHILE_END3
+push local 3
+push constant 10
+call Math.multiply 2
+push local 0
+add
+push static 0
+add
+push constant 7
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+pop local 2
+label WHILE_EXP4
+push local 2
+push local 3
+lt
+not
+if-goto WHILE_END4
+push local 2
+push constant 1
+add
+push constant 10
+call Math.multiply 2
+push local 1
+add
+push static 0
+add
+push local 2
+push constant 10
+call Math.multiply 2
+push local 1
+add
+push static 0
+add
+pop pointer 1
+push that 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+goto WHILE_EXP4
+label WHILE_END4
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP3
+label WHILE_END3
+push local 4
+push constant 1
+add
+pop local 4
+label IF_FALSE2
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
+push this 3
+push local 4
+add
+pop this 3
+push constant 0
+pop local 5
+push local 4
+push constant 0
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push this 3
+push constant 10
+call Main.modulo 2
+push constant 0
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push this 4
+push constant 1
+add
+pop this 4
+label IF_FALSE4
+push constant 100
+pop local 5
+push this 6
+push constant 1
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 200
+pop local 5
+label IF_FALSE5
+push this 6
+push constant 2
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push constant 800
+pop local 5
+label IF_FALSE6
+push local 4
+push constant 2
+eq
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push constant 300
+pop local 5
+push this 6
+push constant 2
+eq
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+push constant 1200
+pop local 5
+label IF_FALSE8
+label IF_FALSE7
+push local 4
+push constant 3
+eq
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+push constant 500
+pop local 5
+push this 6
+push constant 2
+eq
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push constant 1600
+pop local 5
+label IF_FALSE10
+label IF_FALSE9
+push local 4
+push constant 4
+eq
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+push constant 800
+pop local 5
+label IF_FALSE11
+label IF_FALSE3
+push local 5
+push this 4
+call Math.multiply 2
+pop local 5
+push this 6
+push constant 0
+gt
+push local 4
+push constant 4
+eq
+or
+pop local 9
+push this 9
+push local 9
+and
+if-goto IF_TRUE12
+goto IF_FALSE12
+label IF_TRUE12
+push local 5
+push local 5
+push constant 2
+call Math.divide 2
+add
+pop local 5
+label IF_FALSE12
+push pointer 0
+push local 5
+call Game.increase_score_by 2
+pop temp 0
+push local 9
+pop this 9
+push pointer 0
+call Game.pop_next_queue 1
+call Tetrimino.new 1
+pop this 2
+push constant 0
+not
+pop this 10
+push this 2
+call Tetrimino.get_type 1
+push constant 7
+eq
+push local 8
+or
+if-goto IF_TRUE13
+goto IF_FALSE13
+label IF_TRUE13
+push constant 0
+not
+pop this 11
+label IF_FALSE13
+push constant 0
+return
+function Game.increase_score_by 0
+push argument 0
+pop pointer 0
+push this 5
+push constant 32767
+push argument 1
+sub
+gt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 1
+pop this 5
+push this 7
+push constant 1
+add
+pop this 7
+goto IF_END0
+label IF_FALSE0
+push this 5
+push argument 1
+add
+pop this 5
+label IF_END0
+push constant 0
+return
+function Game.get_drop_delay 0
+push argument 0
+pop pointer 0
+push this 4
+push constant 1
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 1000
+return
+label IF_FALSE0
+push this 4
+push constant 2
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 793
+return
+label IF_FALSE1
+push this 4
+push constant 3
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 618
+return
+label IF_FALSE2
+push this 4
+push constant 4
+eq
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 473
+return
+label IF_FALSE3
+push this 4
+push constant 5
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 355
+return
+label IF_FALSE4
+push this 4
+push constant 6
+eq
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 262
+return
+label IF_FALSE5
+push this 4
+push constant 7
+eq
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push constant 190
+return
+label IF_FALSE6
+push this 4
+push constant 8
+eq
+if-goto IF_TRUE7
+goto IF_FALSE7
+label IF_TRUE7
+push constant 135
+return
+label IF_FALSE7
+push this 4
+push constant 9
+eq
+if-goto IF_TRUE8
+goto IF_FALSE8
+label IF_TRUE8
+push constant 94
+return
+label IF_FALSE8
+push this 4
+push constant 10
+eq
+if-goto IF_TRUE9
+goto IF_FALSE9
+label IF_TRUE9
+push constant 64
+return
+label IF_FALSE9
+push this 4
+push constant 11
+eq
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push constant 43
+return
+label IF_FALSE10
+push this 4
+push constant 12
+eq
+if-goto IF_TRUE11
+goto IF_FALSE11
+label IF_TRUE11
+push constant 28
+return
+label IF_FALSE11
+push this 4
+push constant 13
+eq
+if-goto IF_TRUE12
+goto IF_FALSE12
+label IF_TRUE12
+push constant 18
+return
+label IF_FALSE12
+push this 4
+push constant 14
+eq
+if-goto IF_TRUE13
+goto IF_FALSE13
+label IF_TRUE13
+push constant 11
+return
+label IF_FALSE13
+push this 4
+push constant 15
+eq
+if-goto IF_TRUE14
+goto IF_FALSE14
+label IF_TRUE14
+push constant 7
+return
+label IF_FALSE14
+push constant 30000
+return
+function Game.get_matrix_val 0
+push argument 0
+push static 0
+add
+pop pointer 1
+push that 0
+return
+function Game.set_matrix_val 0
+push argument 0
+push static 0
+add
+push argument 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+return
+function Game.invalid_spot 0
+push argument 0
+push constant 0
+lt
+push argument 0
+push constant 239
+gt
+or
+push argument 1
+push constant 10
+call Main.modulo 2
+push argument 0
+push constant 10
+call Main.modulo 2
+sub
+call Math.abs 1
+push constant 5
+gt
+or
+push argument 0
+push static 0
+add
+pop pointer 1
+push that 0
+push constant 7
+eq
+not
+or
+return

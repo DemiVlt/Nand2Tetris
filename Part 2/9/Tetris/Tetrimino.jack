@@ -1,0 +1,305 @@
+class Tetrimino {
+    field int origin, facing, type;
+    field Array minos;
+
+    constructor Tetrimino new(int tetrimino_type) {
+        var int i;
+
+        let type = tetrimino_type;
+        let facing = 0; // default = North
+        let minos = Array.new(4);
+
+        if (type = 1) {
+            let origin = 23;
+            let minos[0] = origin + 10;
+            let minos[1] = origin + 11;
+            let minos[2] = origin + 12;
+            let minos[3] = origin + 13;
+        }
+        else {
+            let origin = 34;
+        }
+
+        if (type = 0) {
+            let minos[0] = origin - 10;
+            let minos[1] = origin - 9;
+            let minos[2] = origin;
+            let minos[3] = origin + 1;
+        }
+        if (type = 2) {
+            let minos[0] = origin - 10;
+            let minos[1] = origin - 1;
+            let minos[2] = origin;
+            let minos[3] = origin + 1;
+        }
+        if (type = 3) {
+            let minos[0] = origin - 9;
+            let minos[1] = origin - 1;
+            let minos[2] = origin;
+            let minos[3] = origin + 1;
+        }
+        if (type = 4) {
+            let minos[0] = origin - 11;
+            let minos[1] = origin - 1;
+            let minos[2] = origin;
+            let minos[3] = origin + 1;
+        }
+        if (type = 5) {
+            let minos[0] = origin - 10;
+            let minos[1] = origin - 9;
+            let minos[2] = origin - 1;
+            let minos[3] = origin;
+        }
+        if (type = 6) {
+            let minos[0] = origin - 11;
+            let minos[1] = origin - 10;
+            let minos[2] = origin;
+            let minos[3] = origin + 1;
+        }
+
+        let i = 0;
+        while (i < 4) {
+            if (Game.invalid_spot(minos[i], origin)) {
+                let type = 7;
+            }
+            let i = i + 1;
+        }
+        do show_minos();
+
+        return this;
+    }
+
+    method void dispose() {
+        do minos.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    method void hide_minos() {
+        var int i;
+        let i = 0;
+        while (i < 4) {
+            do Game.set_matrix_val(minos[i], 7);
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method void show_minos() {
+        var int i;
+        let i = 0;
+        while (i < 4) {
+            do Game.set_matrix_val(minos[i], type);
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    method boolean move_by_offset(int offset) {
+        var Array new_minos;
+        var int i, new_origin;
+
+        let new_minos = Array.new(4);
+        let new_origin = origin + offset;
+
+        do hide_minos();
+
+        let i = 0;
+        while (i < 4) {
+            let new_minos[i] = minos[i] + offset;
+
+            if (Game.invalid_spot(new_minos[i], new_origin)) {
+                do new_minos.dispose();
+                do show_minos();
+                return false; 
+            }
+            let i = i + 1;
+        }
+
+        let minos = new_minos;
+        let origin = new_origin;
+        do show_minos();
+
+        do new_minos.dispose();
+        return true;
+    }
+
+    // absolutely broken
+    method int rotate(boolean is_clockwise) {
+        var boolean collision;
+        var Array new_minos, rotated, collision_offsets, corners;
+        var int new_facing, new_origin, i, j, x, y, ret;
+
+        if (type = 0) {
+            return 0;
+        }
+        let collision = false;
+
+        let new_minos = Array.new(4);
+        let rotated = Array.new(4);
+        let collision_offsets = Array.new(4);
+
+        if (is_clockwise) {
+            let new_facing = facing + 1;
+            if (new_facing = 4) {
+                let new_facing = 0;
+            }
+        } else {
+            let new_facing = facing - 1;
+            if (new_facing = -1) {
+                let new_facing = 3;
+            }
+        }
+
+        do hide_minos();
+        
+        // get a rotated ver of minos & get the 4 possible offsets given a collision
+        if (type = 1) {
+            let i = 0;
+
+            while (i < 4) {
+                if (new_facing = 0) {
+                    let rotated[i] = origin + 10 + i;
+                }
+                if (new_facing = 1) {
+                    let rotated[i] = origin + 2 + (i * 10);
+                }
+                if (new_facing = 2) {
+                    let rotated[i] = origin + 20 + i;
+                }
+                if (new_facing = 3) {
+                    let rotated[i] = origin + 1 + (i * 10);
+                }
+
+                if (Game.invalid_spot(rotated[i], origin)) {
+                    let collision = true;
+                }
+                let i = i + 1;
+            }
+
+            // 0. if old FACING = East, move left 1; else move left 2
+            let collision_offsets[0] = -2;
+            if (facing = 1) {
+                let collision_offsets[0] = collision_offsets[0] + 1;
+            }
+            // 1. if old FACING = East, move right 2; else move right 1
+            let collision_offsets[1] = 1;
+            if (facing = 1) {
+                let collision_offsets[1] = collision_offsets[1] + 1;
+            }
+            // 2. if old FACING = North, move up 2 and al new FACING 1; else move up 1 and al opp new FACING 2
+            if (facing = 0) {
+                let collision_offsets[2] = -20 + Tetrimino.get_dir_offset(new_facing);
+            } else {
+                let collision_offsets[2] = -10 - (Tetrimino.get_dir_offset(new_facing) * 2);
+            }
+            // 3. if new FACING = North, move up 1 and al new FACING 2; else, move up 2 and al opp new FACING 1
+            if (facing = 0) {
+                let collision_offsets[3] = 10 + (Tetrimino.get_dir_offset(new_facing) * 2);
+            } else {
+                let collision_offsets[3] = 20 - Tetrimino.get_dir_offset(new_facing);
+            }
+        } else {
+            let i = 0;
+
+            while (i < 4) {
+                let y = (minos[i] - origin) / 10;
+                let x = minos[i] - origin - (y * 10);
+
+                if (is_clockwise) {
+                    let rotated[i] = origin + y + (-x * 10);
+                } else {
+                    let rotated[i] = origin - y + (x * 10);
+                }
+                let new_minos = rotated;
+
+                if (Game.invalid_spot(new_minos[i], new_origin)) {
+                    let collision = true;
+                }
+                let i = i + 1;
+            }
+
+            // 0. move al old FACING 1
+            let collision_offsets[0] = Tetrimino.get_dir_offset(facing);
+            // 1. move al opp old FACING 1 + al opp new FACING 1
+            let collision_offsets[1] = -Tetrimino.get_dir_offset(facing) - Tetrimino.get_dir_offset(new_facing);
+            // 2. move al new FACING 2
+            let collision_offsets[2] = Tetrimino.get_dir_offset(new_facing) * 2;
+            // 3. move al new FACING 2 and al old FACING 1
+            let collision_offsets[3] = (Tetrimino.get_dir_offset(new_facing) * 2) + Tetrimino.get_dir_offset(facing);
+        }
+
+        // if a collision happens, try the 4 collision offsets before cancelling the rotation
+        let j = 0;
+        while (collision) {
+            let collision = false;
+
+            let i = 0;
+            while (~(collision)) {
+                if (j = 4) {
+                    do show_minos();
+                    do new_minos.dispose();
+                    do rotated.dispose();
+                    do collision_offsets.dispose();
+                    do corners.dispose();
+                    return 0;
+                }
+                let new_minos[i] = rotated[i] + collision_offsets[j];
+
+                if (Game.invalid_spot(new_minos[i], new_origin)) {
+                    let collision = true;
+                }
+                let i = i + 1;
+            }
+
+            let new_origin = origin + collision_offsets[j];
+            let j = j + 1;
+        }
+
+        // finally!
+        let minos = new_minos;
+        do show_minos();
+        let origin = new_origin;
+        let facing = new_facing;
+
+        let corners = Array.new(4);
+        let corners[0] = Game.invalid_spot(origin + Tetrimino.get_dir_offset(facing) + Tetrimino.get_dir_offset(facing - 1), origin);
+        let corners[1] = Game.invalid_spot(origin + Tetrimino.get_dir_offset(facing) + Tetrimino.get_dir_offset(facing + 1), origin);
+        let corners[2] = Game.invalid_spot(origin - Tetrimino.get_dir_offset(facing) + Tetrimino.get_dir_offset(facing - 1), origin);
+        let corners[3] = Game.invalid_spot(origin - Tetrimino.get_dir_offset(facing) + Tetrimino.get_dir_offset(facing + 1), origin);
+
+        let ret = 0;
+        if (type = 2) {
+            if ((corners[0] | corners[1]) & (corners[2] & corners[3])) {
+                let ret = 1; // mini T-spin
+            }
+            if (((corners[0] & corners[1]) & (corners[2] | corners[3])) | (j = 3)) {
+                let ret = 2; // T-spin
+            }
+        }
+
+        do new_minos.dispose();
+        do rotated.dispose();
+        do collision_offsets.dispose();
+        do corners.dispose();
+        return ret;
+    }
+
+    // North = -10, East = 1, South = 10, West = -1
+    function int get_dir_offset(int facing) {
+        if (facing = 0) { return -10; }
+        if (facing = 1) { return 1; }
+        if (facing = 2) { return 10; }
+        if (facing = 3) { return -1; }
+
+        return -240;
+    }
+
+    method int get_type() {
+        return type;
+    }
+
+    method int get_mino(int index) {
+        return minos[index];
+    }
+}

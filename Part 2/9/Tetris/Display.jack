@@ -1,0 +1,78 @@
+class Display {
+    function void draw_matrix(int mx) {
+        var int i, x, y, type;
+
+        do Screen.clearScreen();
+
+        let i = 0;
+        while (i < 200) {
+            let type = Game.get_matrix_val(i + 40);
+
+            let y = i / 10 * 10;
+            let x = mx + ((i - y) * 10);
+
+            if (type = 0) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 2, y + 2, x + 7, y + 7);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 3, y + 3, x + 6, y + 6);
+            }
+
+            // glitched
+            if (type = 1) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 3, y + 3, x + 6, y + 6);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 4, y + 4, x + 6, y + 6);
+            }
+
+            // glitched
+            if (type = 2) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 2, y + 2, x + 7, y + 7);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 3, y + 3, x + 6, y + 6);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 4, y + 4, x + 6, y + 6);
+                do Screen.setColor(true);
+            }
+
+            if (type = 3) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 2, y + 2, x + 7, y + 7);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 3, y + 3, x + 6, y + 6);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 5);
+                do Screen.setColor(true);
+            }
+
+            if (type = 4) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+            }
+
+            if (type = 5) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 2, y + 2, x + 7, y + 7);
+                do Screen.setColor(true);
+                do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 5);
+            }
+
+            if (type = 6) {
+                do Screen.drawRectangle(x + 1, y + 1, x + 8, y + 8);
+                do Screen.setColor(false);
+                do Screen.drawRectangle(x + 4, y + 4, x + 5, y + 5);
+                do Screen.setColor(true);
+            }
+
+            let i = i + 1;
+        }
+
+        return;
+    }
+}

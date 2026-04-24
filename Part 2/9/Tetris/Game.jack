@@ -1,0 +1,422 @@
+class Game {
+    field Array bag, next_queue;
+    field Tetrimino tetrimino;
+    field int lines_cleared, level, score, tick, t_spin, score_overflows, held;
+    field boolean back_to_back, can_hold, game_over;
+
+    static Array matrix;
+
+    constructor Game new() {
+        var int i;
+
+        let matrix = Array.new(240); // (20 rows + 4 above the skyline (for spawning & gameovers)) x 10 columns
+        let i = 0;
+        while (i < 240) {
+            let matrix[i] = 7;
+            let i = i + 1;
+        }
+
+        let held = 7;
+        let lines_cleared = 0;
+        let level = 1;
+        let score = 0;
+        let tick = 0;
+        let t_spin = 0;
+
+        do refill_bag(tick);
+        let next_queue = Array.new(6);
+
+        let i = 0;
+        while (i < 6) {
+            let next_queue[i] = bag[i];
+            let i = i + 1;
+        }
+
+        let tetrimino = Tetrimino.new(bag[6]);
+        do refill_bag(tick);
+
+        return this;
+    }
+
+    method void run() {
+        var char key, temp;
+        var int ticks_held, lock_tick, locks_picked, ms_per_line, i;
+        var boolean exit, lock_down, auto_repeat;
+
+        let can_hold = true;
+
+        let ticks_held = 0;
+        let lock_tick = 0;
+        let locks_picked = 0;
+        let exit = false;
+        let lock_down = false;
+        let auto_repeat = false;
+
+        while (~exit) {
+            let ms_per_line = get_drop_delay();
+            do Display.draw_matrix(0);
+
+            // waits for a key to be pressed.
+            while ((key = 0) & (~exit)) {
+                let key = Keyboard.keyPressed();
+                // drop & lock down
+                if (Main.modulo(tick, ms_per_line) = 0) {
+                    let lock_down = ~tetrimino.move_by_offset(10);
+
+                    if (lock_down & ((lock_tick > 99) | (locks_picked > 14))) {
+                        do lock_tetrimino();
+                    }
+                }
+
+                // tick UP!
+                do Sys.wait(5);
+                if (lock_down) {
+                    let lock_tick = Main.wrapping_add(lock_tick, 1);
+                }
+                let tick = Main.wrapping_add(tick, 1);
+            }
+
+            // Hard Drop (up)
+            if ((key = 131) | (key = 56)) {
+                while (tetrimino.move_by_offset(10)) {
+                    do increase_score_by(2);
+                }
+                do lock_tetrimino();
+            }
+            // Soft Drop (down)
+            if ((key = 133) | (key = 50)) {
+                let ms_per_line = (get_drop_delay() / 20) + 5;
+            }
+
+            // Move Tetrimono Left
+            if ((key = 130) | (key = 52)) {
+                do tetrimino.move_by_offset(-1);
+                let lock_tick = 0;
+                let locks_picked = locks_picked + 1;
+                let t_spin = 0;
+            }
+            // Move Tetrimono Right
+            if ((key = 132) | (key = 54)) {
+                do tetrimino.move_by_offset(1);
+                let lock_tick = 0;
+                let locks_picked = locks_picked + 1;
+                let t_spin = 0;
+            }
+
+            // Rotate Tetrimono Clockwise (z or Numpad 1, 5, or 9)
+            if (((key = 120) | (key = 49)) | ((key = 53) | (key = 57))) {
+                let t_spin = tetrimino.rotate(true);
+                if (t_spin = 1) {
+                    do increase_score_by(100);
+                }
+                if (t_spin = 2) {
+                    do increase_score_by(400);
+                }
+                let lock_tick = 0;
+                let locks_picked = locks_picked + 1;
+            }
+            // Rotate Tetrimono Counterclockwise (x or Numpad 3 or 7)
+            if (((key = 122) | (key = 51)) | (key = 55)) {
+                let t_spin = tetrimino.rotate(false);
+                if (t_spin = 1) {
+                    do increase_score_by(100);
+                }
+                if (t_spin = 2) {
+                    do increase_score_by(400);
+                }
+                let lock_tick = 0;
+                let locks_picked = locks_picked + 1;
+            }
+
+            // Hold (c or Numpad 0)
+            if (((key = 99) | (key = 48)) & can_hold) {
+                do tetrimino.hide_minos();
+                let held = tetrimino.get_type();
+
+                if (held = 7) {
+                    let tetrimino = Tetrimino.new(pop_next_queue());
+                } else {
+                    let tetrimino = Tetrimino.new(held);
+                }
+
+                let can_hold = false;
+            }
+            // Pause Game (Escape or F1)
+            if ((key = 140) | (key = 141)) {
+                let exit = true;
+            }
+
+            // Waits for the key to be released.
+            let ticks_held = 0;
+            while ((~(key = 0)) & (~exit)) {
+                let temp = Keyboard.keyPressed();
+                if (~(key = temp)) {
+                    let key = 0;
+                } else {
+                    let key = temp;
+                }
+                do Display.draw_matrix(0);
+
+                // drop & lock down
+                if (Main.modulo(tick, ms_per_line) = 0) {
+                    let lock_down = ~tetrimino.move_by_offset(10);
+
+                    if (lock_down & ((lock_tick > 99) | (locks_picked > 14))) {
+                        let locks_picked = 0;
+                        let lock_tick = 0;
+                        let lock_down = false;
+                        do lock_tetrimino();
+                    }
+
+                    if (ms_per_line < get_drop_delay()) {
+                        do increase_score_by(1);
+                    }
+                }
+
+                // auto-repeat system babyyy!
+                let auto_repeat = ((ticks_held > 59) & (Main.modulo(ticks_held, 6) = 0));
+
+                if (((key = 130) | (key = 52)) & auto_repeat)  {
+                    if (tetrimino.move_by_offset(-1)) {
+                        let lock_tick = 0;
+                        let locks_picked = locks_picked + 1;
+                    }
+                }
+                if (((key = 132) | (key = 54)) & auto_repeat)  {
+                    if (tetrimino.move_by_offset(1)) {
+                        let lock_tick = 0;
+                        let locks_picked = locks_picked + 1;
+                    }
+                }
+
+                // tick UP!
+                do Sys.wait(5);
+                let ticks_held = Main.wrapping_add(ticks_held, 1);
+                if (lock_down) {
+                    let lock_tick = Main.wrapping_add(lock_tick, 1);
+                }
+                let tick = Main.wrapping_add(tick, 1);
+            }
+        }
+
+	    if (exit) {
+            // pause menu
+	    }
+
+        return;
+    }
+
+    method int pop_next_queue() {
+        var int i;
+        var int ret;
+        let ret = next_queue[0];
+
+        let i = 0;
+        while (i < 5) {
+            let next_queue[i] = next_queue[i + 1];
+            let i = i + 1;
+        }
+        let next_queue[5] = bag[0];
+
+        let i = 0;
+        while (i < 6) {
+            let bag[i] = bag[i + 1];
+            let i = i + 1;
+        }
+
+        if (bag[0] = bag[1]) {
+            do refill_bag(tick);
+        }
+
+        return ret;
+    }
+
+    method void refill_bag(int seed) {
+        var int yup, i, j, k;
+        var boolean loop;
+
+        let yup = Main.modulo(seed, 7);
+
+        let bag = Array.new(7);
+        let i = 0;
+        while (i < 7) {
+            let bag[i] = 7;
+            let i = i + 1;
+        }
+
+        let loop = true;
+
+        let i = 0;
+        while (i < 7) {
+            let j = yup;
+            while (loop) {
+                let seed = Main.modulo((seed * 2) - (i * 3), 8192);
+                let seed = Main.modulo((seed * 3) - j, 16384);
+                let yup = Math.abs(Main.modulo(seed, 7));
+            
+                let k = 0;
+                let loop = false;
+                while ((k < 7) & (~loop)) {
+                    if (bag[k] = yup) {
+                        let loop = true;
+                    }
+                    let k = k + 1;
+                }
+                let j = j + 1;
+            }
+            let loop = true;
+            let bag[i] = yup;
+            let i = i + 1;
+        }
+
+        return;
+    }
+
+    method void lock_tetrimino() {
+        var int i, j, k, row, clears, score_increase, temp_row;
+        var boolean line_clear, lock_out, btb_temp;
+
+        let lock_out = true;
+        let row = -1;
+
+        // line clears are absolutely broken
+        let i = 0;
+        while (i < 4) {
+            let temp_row = tetrimino.get_mino(i) / 10 + clears;
+            while ((temp_row = row) & (i < 3)) {
+                let temp_row = tetrimino.get_mino(i) / 10 + clears;
+                let i = i + 1;
+            }
+            let row = temp_row;
+
+            if (row > 3) {
+                let lock_out = false;
+            }
+
+            let line_clear = true;
+            let j = 0;
+            while ((j < 10) & (line_clear)) {
+                if (matrix[row * 10 + j] = 7) {
+                    let line_clear = false;
+                }
+                let j = j + 1;
+            }
+
+            if (line_clear) {
+                let j = 0;
+                while (j < 10) {
+                    let matrix[row * 10 + i] = 7;
+                    let k = 0;
+                    while (k < row) {
+                        let matrix[k * 10 + (j + 1)] = matrix[k * 10 + j];
+                        let k = k + 1;
+                    }
+                    let j = j + 1;
+                }
+                let clears = clears + 1;
+            }
+            let i = i + 1;
+        }
+
+        let lines_cleared = lines_cleared + clears;
+        let score_increase = 0;
+
+        if (clears > 0) {
+            if (Main.modulo(lines_cleared, 10) = 0) {
+                let level = level + 1;
+            }
+
+            let score_increase = 100;
+            if (t_spin = 1) {
+                let score_increase = 200;
+            }
+            if (t_spin = 2) {
+                let score_increase = 800;
+            }
+
+            if (clears = 2) {
+                let score_increase = 300;
+                if (t_spin = 2) {
+                    let score_increase = 1200;
+                }
+            }
+
+            if (clears = 3) {
+                let score_increase = 500;
+                if (t_spin = 2) {
+                    let score_increase = 1600;
+                }
+            }
+
+            if (clears = 4) {
+                let score_increase = 800;
+            }
+        }
+        let score_increase = (score_increase * level);
+
+        let btb_temp = ((t_spin > 0) | (clears = 4));
+        if (back_to_back & btb_temp) {
+            let score_increase = score_increase + (score_increase / 2);
+        }
+
+        do increase_score_by(score_increase);
+        let back_to_back = btb_temp;
+        let tetrimino = Tetrimino.new(pop_next_queue());
+        let can_hold = true;
+
+        if ((tetrimino.get_type() = 7) | lock_out) {
+            let game_over = true;
+        }
+
+        return;
+    }
+    
+    method int get_drop_delay() {
+        if (level = 1) { return 1000; }
+        if (level = 2) { return 793; }
+        if (level = 3) { return 618; }
+        if (level = 4) { return 473; }
+        if (level = 5) { return 355; }
+        if (level = 6) { return 262; }
+        if (level = 7) { return 190; }
+        if (level = 8) { return 135; }
+        if (level = 9) { return 94; }
+        if (level = 10) { return 64; }
+        if (level = 11) { return 43; }
+        if (level = 12) { return 28; }
+        if (level = 13) { return 18; }
+        if (level = 14) { return 11; }
+        if (level = 15) { return 7; }
+
+        return 30000;
+    }
+
+    method void increase_score_by(int amount) {
+        var int sum;
+        let sum = Main.wrapping_add(score, amount);
+
+        if (sum < score) {
+            let score_overflows = score_overflows + 1; 
+        }
+        let score = sum;
+
+        return;
+    }
+
+    function int get_matrix_val(int index) {
+        return matrix[index];
+    }
+
+    function void set_matrix_val(int index, int tetrimino_type) {
+        let matrix[index] = tetrimino_type;
+
+        return;
+    }
+
+    function boolean invalid_spot(int index, int origin) {
+        return ((((index < 0) 
+            | (index > 239)) 
+            | (Math.abs(Main.modulo(origin, 10) - Main.modulo(index, 10)) > 5)) 
+            | (~(matrix[index] = 7)));
+    }
+}
